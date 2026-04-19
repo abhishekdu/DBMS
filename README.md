@@ -83,12 +83,22 @@ This improves accuracy without always increasing computation.
 ---
 
 ## Project Structure
-project/
-├── sift.py
-├── mnist.py
-├── deep.py
-├── glove.py
-└── README.md
+speech-pipeline/
+│
+├── core/
+│   ├── stage.py        # Base stage class for all modules
+│   ├── pipeline.py     # Pipeline controller
+│
+├── audio/
+│   └── mic.py          # Microphone streaming input
+│
+├── asr/
+│   └── vosk_asr.py    # VOSK
+│
+├── translate/
+│   └── argos_stage.py    # Argos translation
+│
+└── main.py             # Entry point
 
 
 
