@@ -83,12 +83,19 @@ This improves accuracy without always increasing computation.
 ---
 
 ## 📂 Project Structure
+
 project/
 │
-├── main9.py # GloVe + ANN experiments
-├── main10.py # Deep dataset experiments
-├── README.md # Project documentation
-└── data/ # datasets (if applicable)
+└── sift.py             # SIFT 1M dataset
+│
+└── mnist.py             # MNIST dataset
+│
+└── deep.py             # Deep1B dataset
+│
+└── glove.py             # GloVe dataset
+│
+└── README.md             # Project documentation
+
 
 
 ---
@@ -96,7 +103,5 @@ project/
 ## 🛠️ Installation
 
 ```bash
-pip install faiss-cpu numpy scikit-learn
+pip install faiss-cpu numpy scikit-learn h5py matplotlib pandas
 
-##how to run 
-python main9.py
