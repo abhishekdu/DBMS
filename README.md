@@ -85,13 +85,13 @@ This improves accuracy without always increasing computation.
 ## 📂 Project Structure
 
 project/
-│
-├── sift.py          # SIFT 1M dataset experiments
-├── mnist.py         # MNIST dataset experiments
-├── deep.py          # Deep1B dataset experiments
-├── glove.py         # GloVe embeddings experiments
-│
-└── README.md        # Project documentation
+|
+|-- sift.py          # SIFT 1M dataset experiments
+|-- mnist.py         # MNIST dataset experiments
+|-- deep.py          # Deep1B dataset experiments
+|-- glove.py         # GloVe embeddings experiments
+|
+|-- README.md        # Project documentation
 
 
 
