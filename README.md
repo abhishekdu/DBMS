@@ -4,7 +4,7 @@ This project implements a **Vector Database Management System (Vector DBMS)** fo
 
 ---
 
-## 🚀 Project Highlights
+## Project Highlights
 
 - Implements core ANN techniques:
   - Product Quantization (PQ)
@@ -20,7 +20,7 @@ This project implements a **Vector Database Management System (Vector DBMS)** fo
 
 ---
 
-## 🧠 System Overview
+## System Overview
 
 The system is inspired by modern Vector DBMS architectures used in AI search engines.
 
@@ -41,7 +41,7 @@ The system is inspired by modern Vector DBMS architectures used in AI search eng
 
 ---
 
-## ⚡ Adaptive Reranking (Key Contribution)
+## Adaptive Reranking (Key Contribution)
 
 We define a confidence metric:
 Δ = d₂ - d₁
@@ -53,7 +53,7 @@ This improves accuracy without always increasing computation.
 
 ---
 
-## 📊 Datasets Used
+## Datasets Used
 
 | Dataset | Type | Dimensionality |
 |--------|------|---------------|
@@ -64,7 +64,7 @@ This improves accuracy without always increasing computation.
 
 ---
 
-## 📈 Results Summary
+## Results Summary
 
 - AQ consistently outperforms PQ and OPQ
 - Adaptive Reranking significantly boosts Recall@K
@@ -73,7 +73,7 @@ This improves accuracy without always increasing computation.
 
 ---
 
-## 🧪 Technologies Used
+## Technologies Used
 
 - Python 3.10+
 - FAISS (Facebook AI Similarity Search)
@@ -82,7 +82,7 @@ This improves accuracy without always increasing computation.
 
 ---
 
-## 📂 Project Structure
+## Project Structure
 project/
 ├── sift.py
 ├── mnist.py
@@ -94,7 +94,7 @@ project/
 
 ---
 
-## 🛠️ Installation
+## Installation
 
 ```bash
 pip install faiss-cpu numpy scikit-learn h5py matplotlib pandas
