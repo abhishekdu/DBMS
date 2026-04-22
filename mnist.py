@@ -144,7 +144,7 @@ for M in [8, 16]:
    
    # ---------------- PQ ----------------
 
-    '''
+    
     start = time.perf_counter()
     _, pred = pq.search(xq, k)
     lat = (time.perf_counter() - start) / len(xq) * 1000
@@ -161,12 +161,81 @@ for M in [8, 16]:
     _, pred = aq.search(xq, k)
     lat = (time.perf_counter() - start) / len(xq) * 1000
     print_row("AQ", M, pred, lat)
-    '''
+    
     
     # ---------------- AQ + ADAPTIVE ----------------
     start = time.perf_counter()
     pred = adaptive_search_fast(aq, xq, k)
     lat = (time.perf_counter() - start) / len(xq) * 1000
     print_row("AQ+Adaptive", M, pred, lat)
+
+print("=" * 95)
+
+
+# -----------------------------
+# 8. HYPERPARAMETER STUDY
+# -----------------------------
+print("\n" + "="*95)
+print("SECTION 8: DEEP HYPERPARAMETER STUDY (ADAPTIVE AQ)")
+print("="*95)
+print(f"{'M':<3} | {'nlist':<6} | {'nprobe':<6} | {'Delta':<6} | {'Recall':<8} | {'Latency':<10} | {'Trigger%'}")
+print("-" * 95)
+
+# Hyperparameter Grid
+M_values = [4, 8, 16]          # Storage Compression
+nlist_values = [32, 64, 128]    # Indexing Granularity
+nprobe_values = [4, 8, 16]     # Search Breadth
+delta_values = [0.02, 0.05, 0.1]  # Optimizer Sensitivity
+
+for M_study in M_values:
+    # Build a specific index for this M/NLIST combination
+    for nl_study in nlist_values:
+        quantizer_study = faiss.IndexFlatL2(d)
+        index_study = faiss.IndexIVFResidualQuantizer(quantizer_study, d, nl_study, M_study, 8)
+        index_study.train(xb)
+        index_study.add(xb)
+        
+        for np_study in nprobe_values:
+            index_study.nprobe = np_study
+            
+            for d_thresh in delta_values:
+                triggers = 0
+                results_study = []
+                
+                start_study = time.perf_counter()
+                
+                # Phase 1: Initial Coarse Search
+                _, I_initial = index_study.search(xq, 40)
+                
+                for i in range(len(xq)):
+                    cand = I_initial[i]
+                    
+                    # Refine distances for the initial pool
+                    vecs = xb[cand]
+                    diff = vecs - xq[i]
+                    dists = np.einsum('ij,ij->i', diff, diff)
+                    sorted_idx = np.argsort(dists)
+                    sorted_d = dists[sorted_idx]
+                    
+                    # Calculate Confidence Gap
+                    gap = sorted_d[min(k, len(sorted_d)-1)] - sorted_d[0]
+                    
+                    # Phase 2: Adaptive Decision
+                    if gap < d_thresh:
+                        triggers += 1
+                        _, cand_exp = index_study.search(xq[i:i+1], 120)
+                        cand = cand_exp[0]
+                        vecs_exp = xb[cand]
+                        diff_exp = vecs_exp - xq[i]
+                        dists_exp = np.einsum('ij,ij->i', diff_exp, diff_exp)
+                        results_study.append(cand[np.argsort(dists_exp)[:k]])
+                    else:
+                        results_study.append(cand[sorted_idx[:k]])
+                
+                lat_study = (time.perf_counter() - start_study) / len(xq) * 1000
+                rec_study = recall(np.array(results_study))
+                trigger_pct = (triggers / len(xq)) * 100
+                
+                print(f"{M_study:<3} | {nl_study:<6} | {np_study:<6} | {d_thresh:<6} | {rec_study:.4f} | {lat_study:.3f} ms  | {trigger_pct:.1f}%")
 
 print("=" * 95)
