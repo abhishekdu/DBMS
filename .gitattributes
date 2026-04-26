@@ -1,1 +1,2 @@
-sift filter=lfs diff=lfs merge=lfs -text
+*.fvecs filter=lfs diff=lfs merge=lfs -text
+*.ivecs filter=lfs diff=lfs merge=lfs -text
